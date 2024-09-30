@@ -3,10 +3,12 @@ import logging
 from typing import Any
 
 from poprox_concepts import ArticleSet, InterestProfile
+
 from poprox_recommender.components.diversifiers import (
     LocalityCalibrator,
     MMRDiversifier,
     PFARDiversifier,
+    RandomRecommender,
     TopicCalibrator,
 )
 from poprox_recommender.components.embedders import NRMSArticleEmbedder, NRMSUserEmbedder
@@ -44,7 +46,7 @@ def select_articles(
     pipeline state whose ``default`` is the final list of recommendations.
     """
     available_pipelines = recommendation_pipelines(device=default_device())
-    pipeline = available_pipelines["nrms"]
+    pipeline = available_pipelines["random"]
 
     if pipeline_params and "pipeline" in pipeline_params:
         pipeline_name = pipeline_params["pipeline"]
@@ -93,6 +95,8 @@ def build_pipelines(num_slots: int, device: str) -> dict[str, Pipeline]:
     locality_calibrator = LocalityCalibrator(num_slots=num_slots)
     topic_calibrator = TopicCalibrator(num_slots=num_slots)
     sampler = SoftmaxSampler(num_slots=num_slots, temperature=30.0)
+    # random_rec
+    random_recommender = RandomRecommender(num_slots=num_slots)
 
     nrms_pipe = build_pipeline(
         "plain-NRMS",
@@ -142,6 +146,14 @@ def build_pipelines(num_slots: int, device: str) -> dict[str, Pipeline]:
         num_slots=num_slots,
     )
 
+    random_pipe = build_pipeline(
+        "NRMS+random",
+        article_embedder=article_embedder,
+        user_embedder=user_embedder,
+        ranker=random_recommender,
+        num_slots=num_slots,
+    )
+
     return {
         "nrms": nrms_pipe,
         "mmr": mmr_pipe,
@@ -149,6 +161,7 @@ def build_pipelines(num_slots: int, device: str) -> dict[str, Pipeline]:
         "topic-cali": topic_cali_pipe,
         "locality-cali": locality_cali_pipe,
         "softmax": softmax_pipe,
+        "random": random_pipe,
     }
 
 
