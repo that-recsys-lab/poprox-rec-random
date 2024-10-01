@@ -4,7 +4,6 @@ import torch
 from poprox_concepts import ArticleSet, InterestProfile
 
 from poprox_recommender.lkpipeline import Component
-from poprox_recommender.pytorch.datachecks import assert_tensor_size
 from poprox_recommender.pytorch.decorators import torch_inference
 
 
@@ -19,8 +18,6 @@ class RandomRecommender(Component):
 
         num_candidates = len(candidate_articles.articles)
         num_slots = min(self.num_slots, num_candidates)
-
-        # Randomly select article indices
         article_indices = random.sample(range(num_candidates), num_slots)
 
         return ArticleSet(articles=[candidate_articles.articles[int(idx)] for idx in article_indices])
