@@ -8,8 +8,8 @@ from poprox_recommender.components.diversifiers import (
     LocalityCalibrator,
     MMRDiversifier,
     PFARDiversifier,
-    RandomRecommender,
     TopicCalibrator,
+    RandomRecommender,
 )
 from poprox_recommender.components.embedders import NRMSArticleEmbedder, NRMSUserEmbedder
 from poprox_recommender.components.filters import TopicFilter

@@ -6,4 +6,3 @@ from poprox_recommender.components.diversifiers.random_recommender import Random
 from poprox_recommender.components.diversifiers.topic_calibration import TopicCalibrator
 
 __all__ = ["MMRDiversifier", "PFARDiversifier", "Calibrator", "TopicCalibrator", "LocalityCalibrator", "RandomRecommender"]
-
