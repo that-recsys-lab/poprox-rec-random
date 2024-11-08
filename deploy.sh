@@ -16,7 +16,6 @@ region=${region:-us-east-1}
 echo "ENV: $env"
 echo "Region: $region"
 
-
 # Check if a script name was provided as a command line argument
 if [ -z "$1" ]; then
     echo "Error: Not sure whether to run cloudformation or serverless"
@@ -27,7 +26,8 @@ if [ "$1" == "cf" ]; then
     aws cloudformation deploy --template-file cloudformation.yml --stack-name poprox-research-recommender-"${env}" --region "${region}" --capabilities CAPABILITY_NAMED_IAM
 elif [ "$1" == "sls" ]; then
     # Download model artifacts
-    dvc pull
+
+    dvc pull -R models
 
     # Build container and deploy functions
     npx serverless deploy --stage "${env}" --region "${region}"
