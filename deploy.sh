@@ -30,5 +30,5 @@ elif [ "$1" == "sls" ]; then
     dvc pull
 
     # Build container and deploy functions
-    serverless deploy --stage "${env}" --region "${region}"
+    npx serverless deploy --stage "${env}" --region "${region}"
 fi
