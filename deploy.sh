@@ -27,9 +27,16 @@ fi
 if [ "$1" == "cf" ]; then
     aws cloudformation deploy --template-file cloudformation.yml --stack-name poprox-research-recommender-"${env}" --parameter-overrides env="${env}" --region "${region}" --capabilities CAPABILITY_NAMED_IAM
 elif [ "$1" == "sls" ]; then
+	# Set up POPPROX credentials
+    source .env
     # Download model artifacts
     dvc pull -R models
 
+    # Set up CU credentials
+    source .env.cu
     # Build container and deploy functions
     npx serverless deploy --stage "${env}" --region "${region}"
+	
+    unset AWS_ACCESS_KEY_ID
+    unset AWS_SECRET_ACCESS_KEY
 fi
